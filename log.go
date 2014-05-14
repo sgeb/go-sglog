@@ -10,6 +10,7 @@ import (
 
 var (
 	Trace   Logger
+	Debug   Logger
 	Info    Logger
 	Warning Logger
 	Error   Logger
@@ -17,6 +18,7 @@ var (
 
 func init() {
 	SetTrace(nil)
+	SetDebug(nil)
 	SetInfo(nil)
 	SetWarning(os.Stderr)
 	SetError(os.Stderr)
@@ -31,12 +33,16 @@ func setLogger(logger *Logger, handle io.Writer, prefix string) {
 		logger.delegate = log.New(
 			handle,
 			fmt.Sprintf("[%s] ", prefix),
-			log.Ldate|log.Ltime|log.Lshortfile)
+			log.Ldate|log.Ltime|log.Lmicroseconds|log.Lshortfile)
 	}
 }
 
 func SetTrace(handle io.Writer) {
 	setLogger(&Trace, handle, "TRC")
+}
+
+func SetDebug(handle io.Writer) {
+	setLogger(&Debug, handle, "DBG")
 }
 
 func SetInfo(handle io.Writer) {
