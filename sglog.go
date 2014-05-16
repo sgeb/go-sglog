@@ -107,3 +107,17 @@ func (l *Logger) Printf(format string, args ...interface{}) {
 		l.delegate.Printf(format, args...)
 	}
 }
+
+func (l *Logger) PrintStack(all bool) {
+	if l.Enabled {
+		buf := make([]byte, 512)
+		for {
+			n := runtime.Stack(buf, true)
+			if n < len(buf) {
+				break
+			}
+			buf = make([]byte, len(buf)*2)
+		}
+		l.Printf("Stack (all goroutines: %v)\n%v", all, string(buf))
+	}
+}
